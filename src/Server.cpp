@@ -58,4 +58,5 @@ void Server::WorkSpace()
         _storage.push(std::move(ptr));
         std::cout << "Client connected" << std::endl;
     }
+    std::cout << "WorkSpace exit" << std::endl;
 }

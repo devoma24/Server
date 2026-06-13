@@ -87,7 +87,12 @@ std::string Socket::ReceiveData()
 
 void Socket::Close()
 {
-    close(_sockfd);
+    if(_sockfd != INVALID)
+    {
+        shutdown(_sockfd, SHUT_RDWR);
+        close(_sockfd);
+        _sockfd = INVALID;
+    }
 }
 
 bool Socket::IsValid()

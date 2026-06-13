@@ -1,9 +1,10 @@
 #include "../include/ClientSession.h"
 
 ClientSession::ClientSession(Socket&& sock): 
-        _worker(std::move(sock)), _thr(&ClientSession::run, this),
-                    _running(true)
-{}
+        _worker(std::move(sock)), _running(true)
+{
+    _thr = std::thread(&ClientSession::run, this);
+}
 
 ClientSession::~ClientSession()
 {
@@ -18,6 +19,7 @@ void ClientSession::Stop_Run()
 {
     _MTX.lock();
     _running = false;
+    _worker.Close();
     _MTX.unlock();
 }
 
