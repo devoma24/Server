@@ -59,14 +59,20 @@ int Socket::Send(const char* buffer, size_t length)
 
 int Socket::Receive(char* buffer, size_t length)
 {
-    return recv(_sockfd, buffer, 256, 0);
+    return recv(_sockfd, buffer, length, 0);
 }
 
 void Socket::SendAll(const char* buffer, size_t length)
 {
-    while(length < Send(buffer, length))    
+    int total_bytes = 0;
+    while(total_bytes < length)
     {
-        std::cout << "Повторная отправка данных" << std::endl;
+        int send_bytes = Send(buffer + total_bytes, length - total_bytes);
+        if(send_bytes == 0 || send_bytes == 0)
+        {
+            throw std::runtime_error("Ошибка отправки данных");
+        }
+        total_bytes += send_bytes;
     }
 }
 

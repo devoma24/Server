@@ -1,9 +1,11 @@
 #pragma once
 
-enum class Command
+#include <cstdint>
+
+enum class Command: uint8_t
 {
-    GET,
-    SET,
-    ADD,
-    DELETE
+    ADD = 0,
+    GET = 1,
+    SET = 2,
+    DELETE = 3
 };

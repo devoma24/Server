@@ -4,6 +4,7 @@
 #include <netinet/in.h>
 #include <unistd.h>
 #include <cstring>
+#include "Protocol.h"
 
 int main()
 {
