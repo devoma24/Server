@@ -34,4 +34,8 @@ class Packet
     private:
     Command ReadCommand();
     std::string ReadData();
+
+    public:
+    const uint8_t* Data() const;
+    size_t Size() const;
 };

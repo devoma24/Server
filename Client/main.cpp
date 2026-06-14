@@ -16,11 +16,14 @@ int main()
     int res = connect(sock, (sockaddr*)&addr, sizeof(addr));
     std::string buffer;
     char answer[2048];
-    std::cout << "Ваш запрос серверу: ";
-    std::getline(std::cin, buffer);
+    std::cout << "Ваш запрос серверу -> (команда 0-3) (данные): ";
+    Packet packet;
+    packet.WriteCommand(Command::ADD);
+    packet.WriteData("Apple");
     while(buffer != "exit")
     {
-        std::cout << send(sock, buffer.c_str(), buffer.size(), 0) << std::endl;
+
+        std::cout << send(sock, packet.Data(), packet.Size(), 0) << std::endl;
         int bytes = recv(sock, answer, 2048, 0);
         std::cout << "Answer: " << std::string(answer, bytes) << std::endl;
         std::cout << "Ваш запрос серверу: ";

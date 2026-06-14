@@ -1,11 +1,9 @@
-#include "Protocol.h"
+#include "../include/Protocol.h"
 
 Packet::Packet(char* buffer, int length)
         : _readPos(0), _buffer(reinterpret_cast<uint8_t*>(buffer),
               reinterpret_cast<uint8_t*>(buffer) + length)
-{
-
-}
+{}
 
 void Packet::WriteCommand(Command key)
 {
@@ -30,4 +28,14 @@ std::string Packet::ReadData()
     _readPos += size;
 
     return result;
+}
+
+const uint8_t* Packet::Data() const
+{
+    return _buffer.data();
+}
+
+size_t Packet::Size() const
+{
+    return _buffer.size();
 }

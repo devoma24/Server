@@ -19,6 +19,7 @@ Server::~Server()
         _storage.front()->Stop_Run();
         _storage.pop();
     }
+    std::cout << "Объект сервера уничтожен" << std::endl;
 }
 
 void Server::Start()

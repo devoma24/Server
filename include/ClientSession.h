@@ -1,7 +1,8 @@
 #pragma once
 
 #include "Socket.h"
-#include "ParserCommand.h"
+//#include "ParserCommand.h"
+#include "Protocol.h"
 
 #include <thread>
 #include <mutex>

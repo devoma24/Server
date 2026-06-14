@@ -31,3 +31,13 @@ std::string Packet::ReadData()
 
     return result;
 }
+
+const uint8_t* Packet::Data() const
+{
+    return _buffer.data();
+}
+
+size_t Packet::Size() const
+{
+    return _buffer.size();
+}

@@ -54,12 +54,32 @@ void ClientSession::sendData()
 
 void ClientSession::requestProcessing()
 {
-    ParserCommand pcmd { _buffer };
+    //ParserCommand pcmd { _buffer };
+    Packet packet { _buffer.data(), _buffer.size() };
     
-    if(pcmd.GetKey() == "GET")
+    _MTX.lock();
+    switch (packet.ReadCommand())
     {
-        _MTX.lock();
-        std::string key = pcmd.GetArgs()[0];
+    case Command::ADD:
+    {
+        std::string key = packet.ReadData();
+        if(STORAGE.count(key) == 0)
+        {
+            STORAGE.insert_or_assign(key, 0);
+            _buffer.clear();
+            _buffer = "Успешная операция добавления";
+        }
+        else
+        {
+            _buffer.clear();
+            _buffer = "Ошибка при добавлении данных - товар уже существует";
+        }
+        this->sendData();
+        break;
+    }
+    case Command::GET:
+    {
+        std::string key = packet.ReadData();
         if(STORAGE.count(key) != 0)
         {
             _buffer.clear();
@@ -73,15 +93,14 @@ void ClientSession::requestProcessing()
             _buffer = "Нет такого товара в каталоге";
         }
         this->sendData();
-        _MTX.unlock();
-    }
-    else if(pcmd.GetKey() == "SET")
+        break;
+    }   
+    case Command::SET:
     {
-        _MTX.lock();
-        std::string key = pcmd.GetArgs()[0];
+        std::string key = packet.ReadData();
         if(STORAGE.count(key) != 0)
         {
-            STORAGE[key] = std::stoi(pcmd.GetArgs()[1]);
+            STORAGE[key] = std::stoi(packet.ReadData());
             _buffer.clear();
             _buffer = "Успешная операция изменения";
         }
@@ -91,30 +110,11 @@ void ClientSession::requestProcessing()
             _buffer = "Ошибка при изменении данных";
         }
         this->sendData();
-        _MTX.unlock();
-    }
-    else if(pcmd.GetKey() == "ADD")
+        break;
+    } 
+    case Command::DELETE:
     {
-        _MTX.lock();
-        std::string key = pcmd.GetArgs()[0];
-        if(STORAGE.count(key) == 0)
-        {
-            STORAGE.insert_or_assign(key, 0);
-            _buffer.clear();
-            _buffer = "Успешная операция добавления";
-        }
-        else
-        {
-            _buffer.clear();
-            _buffer = "Ошибка при добавлении данных - товар уже существует";
-        }
-        this->sendData();
-        _MTX.unlock();
-    }
-    else if(pcmd.GetKey() == "DELETE")
-    {
-        _MTX.lock();
-        std::string key = pcmd.GetArgs()[0];
+        std::string key = packet.ReadData();
         if(STORAGE.count(key) != 0)
         {
             STORAGE.erase(key);
@@ -127,6 +127,16 @@ void ClientSession::requestProcessing()
             _buffer = "Ошибка при удаление ключа";
         }
         this->sendData();
-        _MTX.unlock();
+        break;
     }
+    default:
+    {
+        _buffer.clear();
+        _buffer = "Некорректная команда";
+        std::cout << _buffer << std::endl;
+        this->sendData();
+        break;
+    }
+    }
+    _MTX.unlock();
 }

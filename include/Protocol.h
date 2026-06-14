@@ -4,13 +4,7 @@
 #include <vector>
 #include <cstdint>
 
-enum class Command: uint8_t
-{
-    ADD = 0,
-    GET = 1,
-    SET = 2,
-    DELETE = 3
-};
+#include "CommandType.h"
 
 class Packet
 {
@@ -30,8 +24,10 @@ class Packet
     void WriteData(std::string data);
 
     public:
-
-    private:
     Command ReadCommand();
     std::string ReadData();
+
+    public:
+    const uint8_t* Data() const;
+    size_t Size() const;
 };
