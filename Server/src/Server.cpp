@@ -25,7 +25,7 @@ Server::~Server()
 void Server::Start()
 {
     std::thread thr(&Server::WorkSpace, this);
-    std::cout << "Создан поток для просулшивания" << std::endl;
+    std::cout << "Создан поток для прослушивания" << std::endl;
     std::cout << "Введите команду(stop): ";
     std::string word;
     std::cin >> word;

@@ -32,7 +32,6 @@ void ClientSession::run()
         std::cout << "Сообщение от клиента: " << _buffer << std::endl;
         // this->sendData();
         this->requestProcessing();
-        sleep(2);
     }
     std::cout << "Выход из run" << std::endl;
 }

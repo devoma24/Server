@@ -83,7 +83,7 @@ void Socket::SendAll(const char* buffer, size_t length)
     while(total_bytes < length)
     {
         int send_bytes = Send(buffer + total_bytes, length - total_bytes);
-        if(send_bytes == 0 || send_bytes == 0)
+        if(send_bytes == 0 || send_bytes == -1)
         {
             throw std::runtime_error("Ошибка отправки данных");
         }
