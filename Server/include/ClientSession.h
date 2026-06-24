@@ -16,17 +16,17 @@ class ClientSession
 {
     private:
     Socket _worker;
-    std::thread _thr;
-    std::atomic<bool> _running;
+    //std::thread _thr;
+    //std::atomic<bool> _running;
     std::string _buffer;
-    std::mutex _MTX;
+    //std::mutex _MTX;
 
     public:
     ClientSession(Socket&&);
     ~ClientSession();
 
     public:
-    void Stop_Run();
+    //void Stop_Run();
 
     private:
     void run();

@@ -1,32 +1,25 @@
 #include "../include/ClientSession.h"
 
 ClientSession::ClientSession(Socket&& sock): 
-        _worker(std::move(sock)), _running(true)
-{
-    _thr = std::thread(&ClientSession::run, this);
-}
+        _worker(std::move(sock)) {}
 
 ClientSession::~ClientSession()
 {
-    if(_thr.joinable())
-    {
-        _thr.join();
-    }
     std::cout << "Сессия закрыта" << std::endl;
 }
 
-void ClientSession::Stop_Run()
-{
-    _MTX.lock();
-    _running = false;
-    _worker.Close();
-    _MTX.unlock();
-}
+// void ClientSession::Stop_Run()
+// {
+//     _MTX.lock();
+//     _running = false;
+//     _worker.Close();
+//     _MTX.unlock();
+// }
 
 void ClientSession::run()
 {
     std::cout << "Start session run" << std::endl;
-    while (_running && _worker.IsValid())
+    while (_worker.IsValid())
     {
         this->recvData();
         std::cout << "Сообщение от клиента: " << _buffer << std::endl;
@@ -49,7 +42,6 @@ void ClientSession::recvData()
         if(_buffer == "Disconnected")
         {
             std::cout << "Соединение с клиентом закрыто" << std::endl;
-            this->Stop_Run();
         }
     }
     catch(const std::exception& e)
@@ -68,7 +60,6 @@ void ClientSession::requestProcessing()
     //ParserCommand pcmd { _buffer };
     Packet packet { _buffer.data(), _buffer.size() };
     
-    _MTX.lock();
     switch (packet.ReadCommand())
     {
     case Command::ADD:
@@ -149,5 +140,4 @@ void ClientSession::requestProcessing()
         break;
     }
     }
-    _MTX.unlock();
 }
