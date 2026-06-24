@@ -26,10 +26,8 @@ class ClientSession
     ~ClientSession();
 
     public:
+    void Run();
     //void Stop_Run();
-
-    private:
-    void run();
 
     private:
     void recvData();

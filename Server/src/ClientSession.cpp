@@ -16,7 +16,7 @@ ClientSession::~ClientSession()
 //     _MTX.unlock();
 // }
 
-void ClientSession::run()
+void ClientSession::Run()
 {
     std::cout << "Start session run" << std::endl;
     while (_worker.IsValid())

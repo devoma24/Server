@@ -47,8 +47,9 @@ void ThreadPool::LoopWork()
         std::unique_ptr<ClientSession> ptr_session;
         {
             std::lock_guard<std::mutex> guard(MUTEX_STORAGE);
-            //ptr_session = std::make_unique<ClientSession>(std::move(_storage.front().get()));
+            ptr_session = std::make_unique<ClientSession>(std::move(_storage.front().get()));
+            _storage.pop();
         }
-
+        ptr_session->Run();
     }
 }
